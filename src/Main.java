@@ -2,13 +2,12 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        String inputString = scanner.nextLine();
-        System.out.println(inputString);
+        final String inputString = getInputFromUser();
 
         TaskCLI taskCLI = new TaskCLI();
-        String[] cliArgs = taskCLI.processInputIntoArray(inputString);
         String actionType;
+
+        String[] cliArgs = taskCLI.processInputIntoArray(inputString);
         try {
             actionType = taskCLI.getActionType(cliArgs);
         } catch (Exception e) {
@@ -16,10 +15,17 @@ public class Main {
         }
 
         System.out.println("Action type = " + actionType);
-        Task task = new Task("Bye bye");
-        Task task2 = new Task("Buy Groceries");
+        Task task = new Task("Buy Groceries");
 
-        System.out.println(task);
-        System.out.println(task2);
+        if (actionType.equals("add")) {
+            taskCLI.add(task);
+        }
+    }
+
+    private static String getInputFromUser() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter prompt: e.g task-cli add \"Buy groceries\"");
+        // TODO: print a much verbose and detailed guide on how to use.
+        return scanner.nextLine();
     }
 }

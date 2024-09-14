@@ -7,18 +7,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class FileManager {
-    public String getJSONFile(String filepath) {
-        // TODO: Validate filepath
+    public String getJSONFile() {
+        String filepath = "tasks.json";
         try {
             File fileManager = new File(filepath);
             boolean isCreated = fileManager.createNewFile();
             if (isCreated) {
                 System.out.println("File created.");
                 return fileManager.getPath();
-            } else {
-                System.out.println("File already exists.");
-                return null;
             }
+            return filepath;
         } catch (IOException e) {
             System.out.println("An error occurred creating file.");
             // Best Practice: Call to 'printStackTrace()' should probably be replaced

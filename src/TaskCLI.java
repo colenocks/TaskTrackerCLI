@@ -1,8 +1,8 @@
+import com.google.gson.JsonArray;
+
 import java.util.Objects;
 
 public class TaskCLI {
-    public TaskCLI() {
-    }
 
     public String[] processInputIntoArray(String input) {
         return input.split(" ");
@@ -16,5 +16,12 @@ public class TaskCLI {
             throw new Exception("Invalid command, try starting with 'task-cli'.");
         }
         return cliArgs[1];
+    }
+
+    public void add(Task newTask) {
+        FileManager fileManager = new FileManager();
+        String pathname = fileManager.getJSONFile();
+        JsonArray jsonArray = fileManager.readFromJSONFile(pathname);
+        fileManager.writeToJSONFile(pathname, jsonArray, newTask);
     }
 }
