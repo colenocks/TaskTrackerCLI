@@ -12,15 +12,19 @@ public class Task {
     private static int total = 0;
 
     public Task(String description) {
-        this.id = String.valueOf(++total);
+        this.id = String.valueOf(total++);
         this.status = "todo";
         this.description = description;
 
-        Date date = Calendar.getInstance().getTime();
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        String currentDate = dateFormatter.format(date);
+        final String currentDate = getCurrentDate();
         this.createdAt = currentDate;
         this.updatedAt = currentDate;
+    }
+
+    private static String getCurrentDate() {
+        Date date = Calendar.getInstance().getTime();
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        return dateFormatter.format(date);
     }
 
     @Override
