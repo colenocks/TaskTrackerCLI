@@ -1,3 +1,5 @@
+import com.google.gson.JsonArray;
+
 import java.util.Scanner;
 
 public class Main {
@@ -5,20 +7,24 @@ public class Main {
         final String inputString = getInputFromUser();
 
         TaskCLI taskCLI = new TaskCLI();
-        String actionType;
-
+        ActionType actionType;
         String[] cliArgs = taskCLI.processInputIntoArray(inputString);
+
         try {
             actionType = taskCLI.getActionType(cliArgs);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        System.out.println("Action type = " + actionType);
-        Task task = new Task("Buy Groceries");
+        if (actionType.equals(ActionType.ADD)) {
+            String description = cliArgs[2].replaceAll("^([\"'])|('|\"$)", "");
 
-        if (actionType.equals("add")) {
+            // TODO: validate arg
+            Task task = new Task(description);
             taskCLI.add(task);
+        } else if (actionType.equals(ActionType.LIST)) {
+            JsonArray json = taskCLI.list();
+            System.out.println(json);
         }
     }
 
