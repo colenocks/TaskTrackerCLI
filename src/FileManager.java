@@ -70,10 +70,25 @@ public class FileManager {
     public void deleteObjectFromJSON(JsonArray jsonArray, String id) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         ArrayList<Task> existingTasks = getJSONAsArrayList(gson, jsonArray);
-        boolean isDeleted = existingTasks.removeIf(t -> Objects.equals(t.id, id));
-        if (!isDeleted) return;
+        boolean isDeleted = existingTasks.removeIf(t -> Objects.equals(t.getId(), id));
+        if (!isDeleted) {
+            System.out.println("Task not found or already deleted.");
+            return;
+        }
+        ;
         writeToJSonFile(gson, existingTasks);
         System.out.println("Task deleted.");
+    }
+
+    public void updateObjectFromJSON(JsonArray jsonArray, String id, String description) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        ArrayList<Task> existingTasks = getJSONAsArrayList(gson, jsonArray);
+
+        existingTasks.stream().filter(t -> t.getId().equals(id))
+                .findAny().ifPresent(t -> t.setDescription(description));
+
+        writeToJSonFile(gson, existingTasks);
+        System.out.println("Task updated.");
     }
 
     private ArrayList<Task> getJSONAsArrayList(Gson gson, JsonArray jsonArray) {

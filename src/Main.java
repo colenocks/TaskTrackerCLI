@@ -22,19 +22,31 @@ public class Main {
 
         int totalTasks = 0;
 
-        if (actionType.equals(ActionType.ADD)) {
-            String description = cliArgs[2].replaceAll("^([\"'])|('|\"$)", "");
-
-            // TODO: validate arg
-            Task task = new Task(++totalTasks, description);
-            taskCLI.add(fileManager, task);
-        } else if (actionType.equals(ActionType.LIST)) {
-            JsonArray json = taskCLI.list(fileManager);
-            System.out.println(json);
-        } else if (actionType.equals(ActionType.DELETE)) {
-            String id = cliArgs[2];
-            taskCLI.delete(fileManager, id);
+        // TODO: validate args
+        switch (actionType) {
+            case ADD -> {
+                final String description = removeSurroundingQuotes(cliArgs[2]);
+                Task task = new Task(String.valueOf(++totalTasks), description);
+                taskCLI.add(fileManager, task);
+            }
+            case LIST -> {
+                JsonArray json = taskCLI.list(fileManager);
+                System.out.println(json);
+            }
+            case UPDATE -> {
+                String id = cliArgs[2];
+                String description = removeSurroundingQuotes(cliArgs[3]);
+                taskCLI.update(fileManager, id, description);
+            }
+            case DELETE -> {
+                String id = cliArgs[2];
+                taskCLI.delete(fileManager, id);
+            }
         }
+    }
+
+    private static String removeSurroundingQuotes(String string) {
+        return string.replaceAll("^([\"'])|('|\"$)", "");
     }
 
     private static String getInputFromUser() {

@@ -34,4 +34,9 @@ public class TaskCLI {
         JsonArray jsonArray = fileManager.readFromJSONFile();
         fileManager.deleteObjectFromJSON(jsonArray, id);
     }
+
+    public void update(FileManager fileManager, String id, String description) {
+        JsonArray jsonArray = fileManager.readFromJSONFile();
+        fileManager.updateObjectFromJSON(jsonArray, id, description);
+    }
 }
