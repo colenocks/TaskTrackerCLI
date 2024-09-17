@@ -1,3 +1,3 @@
 public enum ActionType {
-    LIST, ADD, UPDATE, DELETE
+    list, add, update, delete
 }

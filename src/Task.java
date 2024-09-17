@@ -7,13 +7,13 @@ public class Task {
     private final String id;
     final String createdAt;
     private String description;
-    private String status;
+    private StatusType status;
     private String updatedAt;
 
     public Task(String id, String description) {
         // this.id = String.valueOf(total++);
         this.id = id;
-        this.status = "todo";
+        this.status = StatusType.todo;
         this.description = description;
 
         final String currentDate = getCurrentDate();
@@ -29,7 +29,13 @@ public class Task {
 
     @Override
     public String toString() {
-        return id + ", " + description + ", " + status + ", " + createdAt + ", " + updatedAt;
+        return "{\n" +
+                "id:" + id + ",\n" +
+                "description: " + description + ",\n" +
+                "status: " + status + ",\n" +
+                "createdAt: " + createdAt + ",\n" +
+                "updatedAt:" + updatedAt +
+                "\n}";
     }
 
     public String getId() {
@@ -42,5 +48,9 @@ public class Task {
 
     public void setUpdatedAt() {
         this.updatedAt = getCurrentDate();
+    }
+
+    public StatusType getStatus() {
+        return status;
     }
 }

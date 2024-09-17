@@ -48,14 +48,15 @@ public class FileManager {
     }
 
     public void addTaskToJSONFile(JsonArray jsonArray, Task newTask) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        ArrayList<Task> existingTasks = getJSONAsArrayList(gson, jsonArray);
+        ArrayList<Task> existingTasks = getJSONAsArrayList(jsonArray);
         existingTasks.addLast(newTask); // append new task
-        writeToJSonFile(gson, existingTasks);
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        writeToJSONFile(gson, existingTasks);
         System.out.println("Task added.");
     }
 
-    private void writeToJSonFile(Gson gson, ArrayList<Task> newTasks) {
+    private void writeToJSONFile(Gson gson, ArrayList<Task> newTasks) {
         try (FileWriter fileWriter = new FileWriter(this.filepath, StandardCharsets.UTF_8)) {
             Task[] tasks = newTasks.toArray(new Task[0]); // extract only "tasks"
             TasksList list = new TasksList(tasks);
@@ -68,32 +69,32 @@ public class FileManager {
     }
 
     public void deleteObjectFromJSON(JsonArray jsonArray, String id) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        ArrayList<Task> existingTasks = getJSONAsArrayList(gson, jsonArray);
+        ArrayList<Task> existingTasks = getJSONAsArrayList(jsonArray);
         boolean isDeleted = existingTasks.removeIf(t -> Objects.equals(t.getId(), id));
         if (!isDeleted) {
             System.out.println("Task not found or already deleted.");
             return;
         }
-        writeToJSonFile(gson, existingTasks);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        writeToJSONFile(gson, existingTasks);
         System.out.println("Task deleted.");
     }
 
     public void updateObjectFromJSON(JsonArray jsonArray, String id, String description) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        ArrayList<Task> existingTasks = getJSONAsArrayList(gson, jsonArray);
-
+        ArrayList<Task> existingTasks = getJSONAsArrayList(jsonArray);
         existingTasks.stream().filter(t -> t.getId().equals(id))
                 .findAny().ifPresent(t -> {
                     t.setDescription(description);
                     t.setUpdatedAt();
                 });
 
-        writeToJSonFile(gson, existingTasks);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        writeToJSONFile(gson, existingTasks);
         System.out.println("Task updated.");
     }
 
-    private ArrayList<Task> getJSONAsArrayList(Gson gson, JsonArray jsonArray) {
+    public ArrayList<Task> getJSONAsArrayList(JsonArray jsonArray) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         ArrayList<Task> existingTasks = new ArrayList<>(0);
 
         if (!jsonArray.isEmpty()) {

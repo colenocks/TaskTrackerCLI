@@ -1,5 +1,4 @@
-import com.google.gson.JsonArray;
-
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -24,21 +23,27 @@ public class Main {
 
         // TODO: validate args
         switch (actionType) {
-            case ADD -> {
+            case add -> {
                 final String description = removeSurroundingQuotes(cliArgs[2]);
                 Task task = new Task(String.valueOf(++totalTasks), description);
                 taskCLI.add(fileManager, task);
             }
-            case LIST -> {
-                JsonArray json = taskCLI.list(fileManager);
-                System.out.println(json);
+            case list -> {
+                // # Listing tasks by status
+                if (cliArgs.length > 2) {
+                    List<Task> filteredList = taskCLI.listByStatus(fileManager, StatusType.valueOf(cliArgs[2]));
+                    System.out.println(filteredList);
+                    return;
+                }
+                // # Listing all tasks
+                System.out.println(taskCLI.list(fileManager));
             }
-            case UPDATE -> {
+            case update -> {
                 String id = cliArgs[2];
                 String description = removeSurroundingQuotes(cliArgs[3]);
                 taskCLI.update(fileManager, id, description);
             }
-            case DELETE -> {
+            case delete -> {
                 String id = cliArgs[2];
                 taskCLI.delete(fileManager, id);
             }

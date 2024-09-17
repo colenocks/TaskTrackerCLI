@@ -1,5 +1,6 @@
 import com.google.gson.JsonArray;
 
+import java.util.List;
 import java.util.Objects;
 
 public class TaskCLI {
@@ -18,7 +19,7 @@ public class TaskCLI {
         if (!Objects.equals(cliArgs[0], "task-cli")) {
             throw new Exception("Invalid command, try starting with 'task-cli'.");
         }
-        return ActionType.valueOf(cliArgs[1].toUpperCase());
+        return ActionType.valueOf(cliArgs[1].toLowerCase());
     }
 
     public void add(FileManager fileManager, Task newTask) {
@@ -28,6 +29,12 @@ public class TaskCLI {
 
     public JsonArray list(FileManager fileManager) {
         return fileManager.readFromJSONFile();
+    }
+
+    public List<Task> listByStatus(FileManager fileManager, StatusType status) {
+        JsonArray jsonArray = fileManager.readFromJSONFile();
+        List<Task> list = fileManager.getJSONAsArrayList(jsonArray);
+        return list.stream().filter(t -> t.getStatus().equals(status)).toList();
     }
 
     public void delete(FileManager fileManager, String id) {
