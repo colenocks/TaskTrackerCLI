@@ -75,7 +75,6 @@ public class FileManager {
             System.out.println("Task not found or already deleted.");
             return;
         }
-        ;
         writeToJSonFile(gson, existingTasks);
         System.out.println("Task deleted.");
     }
@@ -85,7 +84,10 @@ public class FileManager {
         ArrayList<Task> existingTasks = getJSONAsArrayList(gson, jsonArray);
 
         existingTasks.stream().filter(t -> t.getId().equals(id))
-                .findAny().ifPresent(t -> t.setDescription(description));
+                .findAny().ifPresent(t -> {
+                    t.setDescription(description);
+                    t.setUpdatedAt();
+                });
 
         writeToJSonFile(gson, existingTasks);
         System.out.println("Task updated.");
