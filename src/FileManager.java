@@ -5,6 +5,7 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class FileManager {
     private String filepath;
@@ -64,6 +65,15 @@ public class FileManager {
             System.out.println("Error writing to JSON file.");
             e.printStackTrace();
         }
+    }
+
+    public void deleteObjectFromJSON(JsonArray jsonArray, String id) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        ArrayList<Task> existingTasks = getJSONAsArrayList(gson, jsonArray);
+        boolean isDeleted = existingTasks.removeIf(t -> Objects.equals(t.id, id));
+        if (!isDeleted) return;
+        writeToJSonFile(gson, existingTasks);
+        System.out.println("Task deleted.");
     }
 
     private ArrayList<Task> getJSONAsArrayList(Gson gson, JsonArray jsonArray) {

@@ -7,24 +7,33 @@ public class Main {
         final String inputString = getInputFromUser();
 
         TaskCLI taskCLI = new TaskCLI();
-        ActionType actionType;
         String[] cliArgs = taskCLI.processInputIntoArray(inputString);
 
+        ActionType actionType;
         try {
             actionType = taskCLI.getActionType(cliArgs);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
+        String filepath = "tasks.json";
+        FileManager fileManager = new FileManager(filepath);
+        fileManager.createJSONFile();
+
+        int totalTasks = 0;
+
         if (actionType.equals(ActionType.ADD)) {
             String description = cliArgs[2].replaceAll("^([\"'])|('|\"$)", "");
 
             // TODO: validate arg
-            Task task = new Task(description);
-            taskCLI.add(task);
+            Task task = new Task(++totalTasks, description);
+            taskCLI.add(fileManager, task);
         } else if (actionType.equals(ActionType.LIST)) {
-            JsonArray json = taskCLI.list();
+            JsonArray json = taskCLI.list(fileManager);
             System.out.println(json);
+        } else if (actionType.equals(ActionType.DELETE)) {
+            String id = cliArgs[2];
+            taskCLI.delete(fileManager, id);
         }
     }
 
