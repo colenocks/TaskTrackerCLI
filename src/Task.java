@@ -3,16 +3,16 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Task {
-    private final String id;
-    private final String description;
-    private final String status;
-    private final String createdAt;
-    private final String updatedAt;
+    static int total = 0;
+    final String id;
+    final String createdAt;
+    String description;
+    String status;
+    String updatedAt;
 
-    private static int total = 0;
-
-    public Task(String description) {
-        this.id = String.valueOf(total++);
+    public Task(int id, String description) {
+        // this.id = String.valueOf(total++);
+        this.id = String.valueOf(id);
         this.status = "todo";
         this.description = description;
 
