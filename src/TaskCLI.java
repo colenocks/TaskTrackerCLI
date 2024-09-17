@@ -21,16 +21,12 @@ public class TaskCLI {
         return ActionType.valueOf(cliArgs[1].toUpperCase());
     }
 
-    public void add(Task newTask) {
-        FileManager fileManager = new FileManager();
-        String pathname = fileManager.getJSONFile();
-        JsonArray jsonArray = fileManager.readFromJSONFile(pathname);
-        fileManager.writeToJSONFile(pathname, jsonArray, newTask);
+    public void add(FileManager fileManager, Task newTask) {
+        JsonArray jsonArray = fileManager.readFromJSONFile();
+        fileManager.addTaskToJSONFile(jsonArray, newTask);
     }
 
-    public JsonArray list() {
-        FileManager fileManager = new FileManager();
-        String pathname = fileManager.getJSONFile();
-        return fileManager.readFromJSONFile(pathname);
+    public JsonArray list(FileManager fileManager) {
+        return fileManager.readFromJSONFile();
     }
 }

@@ -7,28 +7,31 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class FileManager {
-    public String getJSONFile() {
-        String filepath = "tasks.json";
+    private String filepath;
+
+    public FileManager(String filepath) {
+        this.filepath = filepath;
+    }
+
+    public void createJSONFile() {
         try {
-            File fileManager = new File(filepath);
+            File fileManager = new File(this.filepath);
             boolean isCreated = fileManager.createNewFile();
             if (isCreated) {
                 System.out.println("File created.");
-                return fileManager.getPath();
+                this.filepath = fileManager.getPath();
             }
-            return filepath;
         } catch (IOException e) {
             System.out.println("An error occurred creating file.");
             // Best Practice: Call to 'printStackTrace()' should probably be replaced
             // with more robust logging.
             e.printStackTrace();
-            return null;
         }
     }
 
-    public JsonArray readFromJSONFile(String filepath) {
+    public JsonArray readFromJSONFile() {
         // Try with resources statement -> to help manage resource automatically.
-        try (Reader reader = new FileReader(filepath, StandardCharsets.UTF_8)) {
+        try (Reader reader = new FileReader(this.filepath, StandardCharsets.UTF_8)) {
             JsonElement jsonElement = JsonParser.parseReader(reader);
 
             if (jsonElement.isJsonNull()) {
@@ -43,8 +46,27 @@ public class FileManager {
         }
     }
 
-    public void writeToJSONFile(String filename, JsonArray jsonArray, Task newTask) {
+    public void addTaskToJSONFile(JsonArray jsonArray, Task newTask) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        ArrayList<Task> existingTasks = getJSONAsArrayList(gson, jsonArray);
+        existingTasks.addLast(newTask); // append new task
+        writeToJSonFile(gson, existingTasks);
+        System.out.println("Task added.");
+    }
+
+    private void writeToJSonFile(Gson gson, ArrayList<Task> newTasks) {
+        try (FileWriter fileWriter = new FileWriter(this.filepath, StandardCharsets.UTF_8)) {
+            Task[] tasks = newTasks.toArray(new Task[0]); // extract only "tasks"
+            TasksList list = new TasksList(tasks);
+            // list: { "tasksList": { "tasks": [] } }
+            gson.toJson(list.tasksList, fileWriter);
+        } catch (IOException e) {
+            System.out.println("Error writing to JSON file.");
+            e.printStackTrace();
+        }
+    }
+
+    private ArrayList<Task> getJSONAsArrayList(Gson gson, JsonArray jsonArray) {
         ArrayList<Task> existingTasks = new ArrayList<>(0);
 
         if (!jsonArray.isEmpty()) {
@@ -52,19 +74,6 @@ public class FileManager {
             }.getType();
             existingTasks = gson.fromJson(jsonArray, typeObject);
         }
-        existingTasks.addLast(newTask); // append new task
-
-        try (FileWriter fileWriter = new FileWriter(filename, StandardCharsets.UTF_8)) {
-            // task -> { "tasksList": { "tasks": [] } }
-            Task[] tasks = existingTasks.toArray(new Task[0]); // extract only "tasks"
-            TasksList list = new TasksList(tasks);
-            System.out.println();
-
-            gson.toJson(list.tasksList, fileWriter);
-            System.out.println("New Task added.");
-        } catch (IOException e) {
-            System.out.println("Error reading file.");
-            e.printStackTrace();
-        }
+        return existingTasks;
     }
 }
