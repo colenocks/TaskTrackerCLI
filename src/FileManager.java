@@ -80,11 +80,12 @@ public class FileManager {
         System.out.println("Task deleted.");
     }
 
-    public void updateObjectFromJSON(JsonArray jsonArray, String id, String description) {
+    public void updateObjectFromJSON(JsonArray jsonArray, String id, String description, StatusType status) {
         ArrayList<Task> existingTasks = getJSONAsArrayList(jsonArray);
         existingTasks.stream().filter(t -> t.getId().equals(id))
                 .findAny().ifPresent(t -> {
-                    t.setDescription(description);
+                    if (description != null) t.setDescription(description);
+                    if (status != null) t.setStatus(status);
                     t.setUpdatedAt();
                 });
 

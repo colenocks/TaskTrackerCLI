@@ -3,7 +3,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Task {
-    static int total = 0;
     private final String id;
     final String createdAt;
     private String description;
@@ -11,7 +10,6 @@ public class Task {
     private String updatedAt;
 
     public Task(String id, String description) {
-        // this.id = String.valueOf(total++);
         this.id = id;
         this.status = StatusType.todo;
         this.description = description;
@@ -48,6 +46,10 @@ public class Task {
 
     public void setUpdatedAt() {
         this.updatedAt = getCurrentDate();
+    }
+
+    public void setStatus(StatusType status) {
+        this.status = status;
     }
 
     public StatusType getStatus() {

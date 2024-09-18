@@ -41,11 +41,21 @@ public class Main {
             case update -> {
                 String id = cliArgs[2];
                 String description = removeSurroundingQuotes(cliArgs[3]);
-                taskCLI.update(fileManager, id, description);
+                taskCLI.updateDescription(fileManager, id, description);
             }
             case delete -> {
                 String id = cliArgs[2];
                 taskCLI.delete(fileManager, id);
+            }
+            case mark_done -> {
+                String id = cliArgs[2];
+                StatusType status = StatusType.done;
+                taskCLI.updateStatus(fileManager, id, status);
+            }
+            case mark_in_progress -> {
+                String id = cliArgs[2];
+                StatusType status = StatusType.in_progress;
+                taskCLI.updateStatus(fileManager, id, status);
             }
         }
     }

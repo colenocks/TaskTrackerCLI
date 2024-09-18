@@ -19,7 +19,7 @@ public class TaskCLI {
         if (!Objects.equals(cliArgs[0], "task-cli")) {
             throw new Exception("Invalid command, try starting with 'task-cli'.");
         }
-        return ActionType.valueOf(cliArgs[1].toLowerCase());
+        return ActionType.valueOf(cliArgs[1].replaceAll("-", "_").toLowerCase());
     }
 
     public void add(FileManager fileManager, Task newTask) {
@@ -42,8 +42,13 @@ public class TaskCLI {
         fileManager.deleteObjectFromJSON(jsonArray, id);
     }
 
-    public void update(FileManager fileManager, String id, String description) {
+    public void updateDescription(FileManager fileManager, String id, String description) {
         JsonArray jsonArray = fileManager.readFromJSONFile();
-        fileManager.updateObjectFromJSON(jsonArray, id, description);
+        fileManager.updateObjectFromJSON(jsonArray, id, description, null);
+    }
+
+    public void updateStatus(FileManager fileManager, String id, StatusType status) {
+        JsonArray jsonArray = fileManager.readFromJSONFile();
+        fileManager.updateObjectFromJSON(jsonArray, id, null, status);
     }
 }
