@@ -25,6 +25,15 @@ public class Task {
         return dateFormatter.format(date);
     }
 
+    public static boolean isValidId(String string) {
+        try {
+            Integer.parseInt(string);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
     @Override
     public String toString() {
         return "{\n" +

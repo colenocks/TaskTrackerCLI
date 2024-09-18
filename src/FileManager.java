@@ -56,18 +56,6 @@ public class FileManager {
         System.out.println("Task added.");
     }
 
-    private void writeToJSONFile(Gson gson, ArrayList<Task> newTasks) {
-        try (FileWriter fileWriter = new FileWriter(this.filepath, StandardCharsets.UTF_8)) {
-            Task[] tasks = newTasks.toArray(new Task[0]); // extract only "tasks"
-            TasksList list = new TasksList(tasks);
-            // list: { "tasksList": { "tasks": [] } }
-            gson.toJson(list.tasksList, fileWriter);
-        } catch (IOException e) {
-            System.out.println("Error writing to JSON file.");
-            e.printStackTrace();
-        }
-    }
-
     public void deleteObjectFromJSON(JsonArray jsonArray, String id) {
         ArrayList<Task> existingTasks = getJSONAsArrayList(jsonArray);
         boolean isDeleted = existingTasks.removeIf(t -> Objects.equals(t.getId(), id));
@@ -104,5 +92,17 @@ public class FileManager {
             existingTasks = gson.fromJson(jsonArray, typeObject);
         }
         return existingTasks;
+    }
+
+    private void writeToJSONFile(Gson gson, ArrayList<Task> newTasks) {
+        try (FileWriter fileWriter = new FileWriter(this.filepath, StandardCharsets.UTF_8)) {
+            Task[] tasks = newTasks.toArray(new Task[0]); // extract only "tasks"
+            TasksList list = new TasksList(tasks);
+            // list: { "tasksList": { "tasks": [] } }
+            gson.toJson(list.tasksList, fileWriter);
+        } catch (IOException e) {
+            System.out.println("Error writing to JSON file.");
+            e.printStackTrace();
+        }
     }
 }

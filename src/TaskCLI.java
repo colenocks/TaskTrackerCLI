@@ -12,14 +12,54 @@ public class TaskCLI {
 
     }
 
-    public ActionType getActionType(String[] cliArgs) throws Exception {
+    private static String parseString(String string) {
+        return string.replaceAll("-", "_").toLowerCase();
+    }
+
+    public ActionType validateCLIArgs(String[] cliArgs) throws Exception {
         if (cliArgs.length < 2) {
-            throw new Exception("Insufficient args supplied");
+            throw new ArrayIndexOutOfBoundsException("\nMessage: Insufficient args supplied");
         }
         if (!Objects.equals(cliArgs[0], "task-cli")) {
-            throw new Exception("Invalid command, try starting with 'task-cli'.");
+            throw new IllegalArgumentException("\nMessage: Invalid command, try starting with 'task-cli'.");
         }
-        return ActionType.valueOf(cliArgs[1].replaceAll("-", "_").toLowerCase());
+
+        // Positional Arguments Structure for actions
+        /*
+         "add" -> ["task-cli", actionType, description]
+         "update" or "delete" -> ["task-cli", actionType, id, Optional<description>]
+         "list" -> ["task-cli", actionType, Optional<status>]
+         "mark-*" -> ["task-cli", actionType, id]
+        */
+        String action = parseString(cliArgs[1]);
+        if (!CheckEnum.isActionType(action)) {
+            throw new IllegalArgumentException("\nMessage: Action type is invalid. Run 'task-cli help' for guide");
+        }
+
+        switch (ActionType.valueOf(action)) {
+            case add:
+                // when action type is add, description must come next.
+                if (cliArgs.length < 3) {
+                    throw new ArrayIndexOutOfBoundsException("\nMessage: Cannot add an empty task. " +
+                            "Run 'task-cli help' for guide.");
+                }
+            case list:
+                // when action type is list, status comes next (otherwise list all)
+                if (cliArgs.length == 2) break;
+                String status = parseString(cliArgs[2]);
+                if (!CheckEnum.isStatusType(status)) {
+                    throw new IllegalArgumentException("\nMessage: Status is invalid. Valid statuses are " +
+                            "'done', 'todo' & 'in-progress'.");
+                }
+            case update, delete, mark_done, mark_in_progress:
+                // when deleting or updating description/status
+                if (Task.isValidId(cliArgs[2])) {
+                    System.out.println("\nMessage: Id is invalid.");
+                }
+        }
+
+        // TODO: return a hashMap of arguments instead
+        return ActionType.valueOf(action);
     }
 
     public void add(FileManager fileManager, Task newTask) {
