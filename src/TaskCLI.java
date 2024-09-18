@@ -25,7 +25,7 @@ public class TaskCLI {
         }
 
         String action = parseString(cliArgs[1]);
-        if (!CheckEnum.isActionType(action)) {
+        if (!Helper.isActionType(action)) {
             throw new IllegalArgumentException("\nMessage: Action type is invalid. Run 'task-cli help' for guide");
         }
 
@@ -40,7 +40,7 @@ public class TaskCLI {
                 // when action type is list, status comes next (otherwise list all)
                 if (cliArgs.length == 2) break;
                 String status = parseString(cliArgs[2]);
-                if (!CheckEnum.isStatusType(status)) {
+                if (!Helper.isStatusType(status)) {
                     throw new IllegalArgumentException("\nMessage: Status is invalid. Valid statuses are " +
                             "'done', 'todo' & 'in-progress'.");
                 }

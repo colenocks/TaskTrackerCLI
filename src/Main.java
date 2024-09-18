@@ -3,6 +3,11 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println(CLIColors.PURPLE_BACKGROUND_BRIGHT +
+                CLIColors.WHITE_BOLD_BRIGHT +
+                "\tTask Tracker CLI 2024\t" +
+                CLIColors.RESET);
+
         final String inputString = getInputFromUser();
 
         TaskCLI taskCLI = new TaskCLI();
@@ -10,9 +15,11 @@ public class Main {
 
         ActionType actionType;
         try {
-            actionType = taskCLI.getActionType(cliArgs);
+            actionType = taskCLI.validateCLIArgs(cliArgs);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println("Error occurred: " + e);
+            System.out.println("Please run command again.");
+            return;
         }
 
         String filepath = "tasks.json";
@@ -21,10 +28,10 @@ public class Main {
 
         int totalTasks = 0;
 
-        // TODO: validate args
         switch (actionType) {
+            case help -> Helper.printHelpText();
             case add -> {
-                final String description = removeSurroundingQuotes(cliArgs[2]);
+                final String description = Helper.removeSurroundingQuotes(cliArgs[2]);
                 Task task = new Task(String.valueOf(++totalTasks), description);
                 taskCLI.add(fileManager, task);
             }
@@ -40,7 +47,7 @@ public class Main {
             }
             case update -> {
                 String id = cliArgs[2];
-                String description = removeSurroundingQuotes(cliArgs[3]);
+                String description = Helper.removeSurroundingQuotes(cliArgs[3]);
                 taskCLI.updateDescription(fileManager, id, description);
             }
             case delete -> {
@@ -58,10 +65,6 @@ public class Main {
                 taskCLI.updateStatus(fileManager, id, status);
             }
         }
-    }
-
-    private static String removeSurroundingQuotes(String string) {
-        return string.replaceAll("^([\"'])|('|\"$)", "");
     }
 
     private static String getInputFromUser() {

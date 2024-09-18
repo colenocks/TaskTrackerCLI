@@ -26,7 +26,6 @@ public class FileManager {
             System.out.println("An error occurred creating file.");
             // Best Practice: Call to 'printStackTrace()' should probably be replaced
             // with more robust logging.
-            e.printStackTrace();
         }
     }
 
@@ -42,7 +41,6 @@ public class FileManager {
 
         } catch (IOException e) {
             System.out.println("Error reading file.");
-            e.printStackTrace();
             return null;
         }
     }
@@ -102,7 +100,6 @@ public class FileManager {
             gson.toJson(list.tasksList, fileWriter);
         } catch (IOException e) {
             System.out.println("Error writing to JSON file.");
-            e.printStackTrace();
         }
     }
 }
