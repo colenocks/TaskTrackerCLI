@@ -1,11 +1,18 @@
 {
   "tasks": [
     {
-      "id": "0",
-      "description": "Buy Groceries",
-      "status": "todo",
+      "id": "1",
       "createdAt": "14-09-2024 08:25:41",
-      "updatedAt": "14-09-2024 08:25:41"
+      "description": "Start Task Tracker CLI",
+      "status": "todo",
+      "updatedAt": "17-09-2024 23:40:15"
+    },
+    {
+      "id": "2",
+      "createdAt": "18-09-2024 15:10:26",
+      "description": "Finish Task Tracker CLI",
+      "status": "done",
+      "updatedAt": "118-09-2024 15:10:26"
     }
   ]
 }
