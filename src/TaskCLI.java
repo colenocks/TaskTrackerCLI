@@ -16,7 +16,7 @@ public class TaskCLI {
         return string.replaceAll("-", "_").toLowerCase();
     }
 
-    public ActionType validateCLIArgs(String[] cliArgs) throws Exception {
+    public ActionType validateCLIArgs(String[] cliArgs) {
         if (cliArgs.length < 2) {
             throw new ArrayIndexOutOfBoundsException("\nMessage: Insufficient args supplied");
         }
@@ -24,13 +24,6 @@ public class TaskCLI {
             throw new IllegalArgumentException("\nMessage: Invalid command, try starting with 'task-cli'.");
         }
 
-        // Positional Arguments Structure for actions
-        /*
-         "add" -> ["task-cli", actionType, description]
-         "update" or "delete" -> ["task-cli", actionType, id, Optional<description>]
-         "list" -> ["task-cli", actionType, Optional<status>]
-         "mark-*" -> ["task-cli", actionType, id]
-        */
         String action = parseString(cliArgs[1]);
         if (!CheckEnum.isActionType(action)) {
             throw new IllegalArgumentException("\nMessage: Action type is invalid. Run 'task-cli help' for guide");
