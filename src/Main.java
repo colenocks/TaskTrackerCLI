@@ -13,9 +13,9 @@ public class Main {
         TaskCLI taskCLI = new TaskCLI();
         String[] cliArgs = taskCLI.processInputIntoArray(inputString);
 
-        ActionType actionType;
+        ActionEnum action;
         try {
-            actionType = taskCLI.validateCLIArgs(cliArgs);
+            action = taskCLI.validateCLIArgs(cliArgs);
         } catch (Exception e) {
             System.out.println("Error occurred: " + e);
             System.out.println("Please run command again.");
@@ -28,7 +28,7 @@ public class Main {
 
         int totalTasks = 0;
 
-        switch (actionType) {
+        switch (action) {
             case help -> Helper.printHelpText();
             case add -> {
                 final String description = Helper.removeSurroundingQuotes(cliArgs[2]);
@@ -38,7 +38,7 @@ public class Main {
             case list -> {
                 // # Listing tasks by status
                 if (cliArgs.length > 2) {
-                    List<Task> filteredList = taskCLI.listByStatus(fileManager, StatusType.valueOf(cliArgs[2]));
+                    List<Task> filteredList = taskCLI.listByStatus(fileManager, StatusEnum.valueOf(cliArgs[2]));
                     System.out.println(filteredList);
                     return;
                 }
@@ -56,12 +56,12 @@ public class Main {
             }
             case mark_done -> {
                 String id = cliArgs[2];
-                StatusType status = StatusType.done;
+                StatusEnum status = StatusEnum.done;
                 taskCLI.updateStatus(fileManager, id, status);
             }
             case mark_in_progress -> {
                 String id = cliArgs[2];
-                StatusType status = StatusType.in_progress;
+                StatusEnum status = StatusEnum.in_progress;
                 taskCLI.updateStatus(fileManager, id, status);
             }
         }

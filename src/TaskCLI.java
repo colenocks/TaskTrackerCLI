@@ -16,7 +16,7 @@ public class TaskCLI {
         return string.replaceAll("-", "_").toLowerCase();
     }
 
-    public ActionType validateCLIArgs(String[] cliArgs) {
+    public ActionEnum validateCLIArgs(String[] cliArgs) {
         if (cliArgs.length < 2) {
             throw new ArrayIndexOutOfBoundsException("\nMessage: Insufficient args supplied");
         }
@@ -29,7 +29,7 @@ public class TaskCLI {
             throw new IllegalArgumentException("\nMessage: Action type is invalid. Run 'task-cli help' for guide");
         }
 
-        switch (ActionType.valueOf(action)) {
+        switch (ActionEnum.valueOf(action)) {
             case add:
                 // when action type is add, description must come next.
                 if (cliArgs.length < 3) {
@@ -52,7 +52,7 @@ public class TaskCLI {
         }
 
         // TODO: return a hashMap of arguments instead
-        return ActionType.valueOf(action);
+        return ActionEnum.valueOf(action);
     }
 
     public void add(FileManager fileManager, Task newTask) {
@@ -64,7 +64,7 @@ public class TaskCLI {
         return fileManager.readFromJSONFile();
     }
 
-    public List<Task> listByStatus(FileManager fileManager, StatusType status) {
+    public List<Task> listByStatus(FileManager fileManager, StatusEnum status) {
         JsonArray jsonArray = fileManager.readFromJSONFile();
         List<Task> list = fileManager.getJSONAsArrayList(jsonArray);
         return list.stream().filter(t -> t.getStatus().equals(status)).toList();
@@ -80,7 +80,7 @@ public class TaskCLI {
         fileManager.updateObjectFromJSON(jsonArray, id, description, null);
     }
 
-    public void updateStatus(FileManager fileManager, String id, StatusType status) {
+    public void updateStatus(FileManager fileManager, String id, StatusEnum status) {
         JsonArray jsonArray = fileManager.readFromJSONFile();
         fileManager.updateObjectFromJSON(jsonArray, id, null, status);
     }

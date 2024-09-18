@@ -6,12 +6,12 @@ public class Task {
     private final String id;
     final String createdAt;
     private String description;
-    private StatusType status;
+    private StatusEnum status;
     private String updatedAt;
 
     public Task(String id, String description) {
         this.id = id;
-        this.status = StatusType.todo;
+        this.status = StatusEnum.todo;
         this.description = description;
 
         final String currentDate = getCurrentDate();
@@ -57,11 +57,11 @@ public class Task {
         this.updatedAt = getCurrentDate();
     }
 
-    public void setStatus(StatusType status) {
-        this.status = status;
+    public StatusEnum getStatus() {
+        return status;
     }
 
-    public StatusType getStatus() {
-        return status;
+    public void setStatus(StatusEnum status) {
+        this.status = status;
     }
 }
